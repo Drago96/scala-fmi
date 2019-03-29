@@ -1,4 +1,4 @@
-class Queue[A] private(val in: List[A], val out: List[A]) {
+class Queue[A] private(val in: List[A], val out: List[A]) extends Iterable[A] {
   def peek: A =
     if (out.nonEmpty) out.head
     else if (in.nonEmpty) in.last
@@ -12,9 +12,11 @@ class Queue[A] private(val in: List[A], val out: List[A]) {
     case _ => throw new NoSuchElementException
   }
 
-  def isEmpty: Boolean = in.isEmpty && out.isEmpty
+  override def isEmpty: Boolean = in.isEmpty && out.isEmpty
 
-  def size: Int = in.size + out.size
+  override def size: Int = in.size + out.size
+
+  def iterator: Iterator[A] = (out ++ in.reverse).iterator
 }
 
 object Queue {

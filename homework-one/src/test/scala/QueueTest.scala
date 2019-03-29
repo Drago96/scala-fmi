@@ -2,11 +2,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class QueueTest extends FlatSpec with Matchers {
   "an empty queue" should "produce a queue with a single element when that element is added to it" in {
-    val emptyQueue = Queue.empty[Int]
-    val singleElementQueue = emptyQueue.push(42)
-
-    singleElementQueue.peek shouldBe 42
-    singleElementQueue.size shouldBe 1
+    Queue.empty[Int].push(42).toList shouldBe List(42)
   }
 
   it should "throw a NoSuchElementException on peek" in {
@@ -30,20 +26,15 @@ class QueueTest extends FlatSpec with Matchers {
   }
 
   it should "allow consecutive push and pop operations" in {
-    Queue.empty[Int].push(42).pop.size shouldBe 0
+    Queue.empty[Int].push(42).pop.toList shouldBe Nil
   }
 
   "a non empty queue" should "produce a new queue on pop" in {
-    val queue = Queue(List(11, 13))
-
-    val newQueue = queue.pop
-
-    newQueue.peek shouldBe 13
-    newQueue.size shouldBe 1
+    Queue(List(11, 13)).pop.toList shouldBe List(13)
   }
 
   it should "produce a new queue on push" in {
-    Queue(List(11, 13)).push(42).size shouldBe 3
+    Queue(List(11, 13)).push(42).toList shouldBe List(11, 13, 42)
   }
 
   it should "return the front of the queue on peek" in {

@@ -75,32 +75,15 @@ class FunctionsTest extends FlatSpec with Matchers {
     case _ => List()
   }
 
-  @tailrec
-  private def pathToList(path: Queue[Int], accumulated: List[Int] = Nil): List[Int] =
-    if (path.isEmpty) {
-      accumulated.reverse
-    } else {
-      val current = path.peek
-
-      pathToList(path.pop, current :: accumulated)
-    }
-
-
   "bfsTraversal" should "traverse correctly when end is reachable" in {
-    val path = bfsTraversal(1, 6, neighbours)
-
-    pathToList(path) shouldBe List(1, 2, 5, 8, 3, 6)
+    bfsTraversal(1, 6, neighbours).toList shouldBe List(1, 2, 5, 8, 3, 6)
   }
 
   it should "traverse correctly when end is unreachable" in {
-    val path = bfsTraversal(5, 1, neighbours)
-
-    pathToList(path) shouldBe List(5, 6, 7)
+    bfsTraversal(5, 1, neighbours).toList shouldBe List(5, 6, 7)
   }
 
   it should "traverse correctly when starting vertex has no neighbours" in {
-    val path = bfsTraversal(13, 11, neighbours)
-
-    pathToList(path) shouldBe List(13)
+    bfsTraversal(13, 11, neighbours).toList shouldBe List(13)
   }
 }
