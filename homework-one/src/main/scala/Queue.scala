@@ -18,7 +18,7 @@ class Queue[A] private(val in: List[A], val out: List[A]) {
 }
 
 object Queue {
-  def empty: Queue[AnyVal] = new Queue(Nil, Nil)
+  def empty[A]: Queue[A] = new Queue(Nil, Nil)
 
   def apply[A](xs: Seq[A]): Queue[A] = new Queue(Nil, xs.toList)
 }
