@@ -48,4 +48,12 @@ class QueueTest extends FlatSpec with Matchers {
   it should "return correct size on size" in {
     Queue(List(11, 13)).size shouldBe 2
   }
+  it should "allow push of a non empty sequence" in {
+    Queue(List(11, 13)).push(List(1, 2, 3)).toList shouldBe List(11, 13, 1, 2, 3)
+  }
+
+  it should "allow push of an empty sequence" in {
+    Queue(List(11, 13)).push(List.empty).toList shouldBe List(11, 13)
+  }
+
 }

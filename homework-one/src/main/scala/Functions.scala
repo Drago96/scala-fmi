@@ -1,22 +1,11 @@
 import scala.annotation.tailrec
 
-import ListWrappers.TakeUntil
-
 object Functions {
-  def fromDigits(digits: List[Int], radix: Int = 10): Int = digits.reverse.zipWithIndex.foldLeft(0) {
-    (sum, digit) => {
-      val (value, index) = digit
-
-      sum + value * math.pow(radix, index).toInt
-    }
-  }
+  def fromDigits(digits: List[Int], radix: Int = 10): Int = digits.foldLeft(0)(_ * radix + _)
 
   def parseInteger(integer: String, radix: Int = 10): Int = integer.toList match {
     case '-' :: _ => -parseInteger(integer.tail, radix)
-    case positiveInteger => fromDigits(positiveInteger.map({
-      case symbol if symbol.isDigit => symbol.asDigit
-      case letter => letter.toInt - 55
-    }), radix)
+    case positiveInteger => fromDigits(positiveInteger.map(_.asDigit), radix)
   }
 
   def zipMap[A, B, C](a: List[A], b: List[B], f: (A, B) => C): List[C] = {
@@ -40,27 +29,15 @@ object Functions {
   }
 
   def countCoinChangeVariants(denominations: List[Int], change: Int): Int = {
-    def countCoinChangeVariants(denominations: List[Int], change: Int, coinOptions: Int): Int =
-      if (change == 0) {
-        1
-      } else if (change < 0 || coinOptions == 0) {
-        0
-      } else {
-        countCoinChangeVariants(denominations, change, coinOptions - 1) +
-          countCoinChangeVariants(denominations, change - denominations(coinOptions - 1), coinOptions)
-      }
-
-    countCoinChangeVariants(denominations, change, denominations.length)
+    if (change == 0) 1
+    else if (change < 0 || denominations.isEmpty) 0
+    else countCoinChangeVariants(denominations, change - denominations.head) +
+      countCoinChangeVariants(denominations.tail, change)
   }
 
   def bfsTraversal(start: Int, end: Int, neighbours: Int => List[Int]): Queue[Int] = {
-    val visited = Set[Int](start)
-
-    val verticesToVisit = Queue[Int](List[Int](start))
-    val path = verticesToVisit
-
     @tailrec
-    def bfsTraversal(verticesToVisit: Queue[Int], path: Queue[Int], visited: Set[Int]): Queue[Int] = {
+    def bfsTraversal(verticesToVisit: Queue[Int], visited: Set[Int], path: Queue[Int]): Queue[Int] = {
       if (verticesToVisit.isEmpty) {
         return path
       }
@@ -68,21 +45,18 @@ object Functions {
       val current = verticesToVisit.peek
 
       if (current == end) {
-        return path
+        return path.push(current)
       }
 
-      val verticesToExplore = neighbours(current).filter(!visited(_)).takeUntil(_ != end)
+      val verticesToExplore = neighbours(current).filter(!visited(_))
 
-      if (verticesToExplore.isEmpty) {
-        return path
-      }
-
-      val newVerticesToVisit = verticesToExplore.foldLeft(verticesToVisit.pop)(_.push(_))
-      val newPath = verticesToExplore.foldLeft(path)(_.push(_))
-
-      bfsTraversal(newVerticesToVisit, newPath, visited ++ verticesToExplore)
+      bfsTraversal(
+        verticesToVisit.pop.push(verticesToExplore),
+        visited ++ verticesToExplore,
+        path.push(current)
+      )
     }
 
-    bfsTraversal(verticesToVisit, path, visited)
+    bfsTraversal(Queue(List(start)), Set(start), Queue.empty)
   }
 }
