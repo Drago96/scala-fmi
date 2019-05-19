@@ -181,6 +181,3 @@ object UserRegistration {
       UserValidator.validatePostalCode(form.postalCode, userCountryPostalCodeVerifier)
     ).zipMap(User.apply)
 }
-
-
-
