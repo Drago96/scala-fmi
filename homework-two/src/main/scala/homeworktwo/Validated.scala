@@ -75,7 +75,7 @@ object Validated {
   }
 
   implicit class ValidatedTuple3[EE, A, B, C](val tuple: (Validated[EE, A], Validated[EE, B], Validated[EE, C])) extends AnyVal {
-    def zip: Validated[EE, (A, B, C)] = tuple._1.zip(tuple._2).zip(tuple._3).flatMap(
+    def zip: Validated[EE, (A, B, C)] = (tuple._1, tuple._2).zip.zip(tuple._3).flatMap(
       tupledValues => Valid(tupledValues._1._1, tupledValues._1._2, tupledValues._2)
     )
 
@@ -84,11 +84,11 @@ object Validated {
 
   implicit class ValidatedTuple4[EE, A, B, C, D]
   (val tuple: (Validated[EE, A], Validated[EE, B], Validated[EE, C], Validated[EE, D])) extends AnyVal {
-    def zip: Validated[EE, (A, B, C, D)] = tuple._1.zip(tuple._2).zip(tuple._3).zip(tuple._4).flatMap(
+    def zip: Validated[EE, (A, B, C, D)] = (tuple._1, tuple._2, tuple._3).zip.zip(tuple._4).flatMap(
       tupledValues => Valid(
-        tupledValues._1._1._1,
-        tupledValues._1._1._2,
+        tupledValues._1._1,
         tupledValues._1._2,
+        tupledValues._1._3,
         tupledValues._2
       )
     )
@@ -98,12 +98,12 @@ object Validated {
 
   implicit class ValidatedTuple5[EE, A, B, C, D, E]
   (val tuple: (Validated[EE, A], Validated[EE, B], Validated[EE, C], Validated[EE, D], Validated[EE, E])) extends AnyVal {
-    def zip: Validated[EE, (A, B, C, D, E)] = tuple._1.zip(tuple._2).zip(tuple._3).zip(tuple._4).zip(tuple._5).flatMap(
+    def zip: Validated[EE, (A, B, C, D, E)] = (tuple._1, tuple._2, tuple._3, tuple._4).zip.zip(tuple._5).flatMap(
       tupledValues => Valid(
-        tupledValues._1._1._1._1,
-        tupledValues._1._1._1._2,
-        tupledValues._1._1._2,
+        tupledValues._1._1,
         tupledValues._1._2,
+        tupledValues._1._3,
+        tupledValues._1._4,
         tupledValues._2
       )
     )
